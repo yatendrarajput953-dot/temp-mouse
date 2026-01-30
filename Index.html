@@ -1,0 +1,671 @@
+
+    
+  
+
+    
+    
+    
+    
+  
+
+
+
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temp Mouse | AI Smart IDs</title>
+    <meta name="description" content="Generate temporary emails and SMS numbers with AI-driven personas.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #10b981;
+            --font-main: 'Inter', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Layout Utilities */
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Header */
+        header {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 0;
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 6px;
+            position: relative;
+        }
+        
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            top: 8px;
+            right: 5px;
+        }
+
+        /* Hero / Main Section */
+        main {
+            flex: 1;
+            padding: 2rem 0;
+        }
+
+        .hero-text {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .hero-text h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-text p {
+            color: var(--text-muted);
+        }
+
+        /* Tool Card */
+        .tool-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            background: rgba(0,0,0,0.2);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: var(--font-main);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: var(--text-main);
+            border-bottom-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--text-main);
+            background: rgba(255,255,255,0.03);
+        }
+
+        /* Output Area */
+        .output-area {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .id-display {
+            background: #0f172a;
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            transition: border-color 0.3s;
+        }
+
+        .id-display.active {
+            border-color: var(--primary);
+            border-style: solid;
+        }
+
+        .generated-id {
+            font-family: var(--font-code);
+            font-size: 1.5rem;
+            color: var(--success);
+            word-break: break-all;
+            display: block;
+        }
+
+        .refresh-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.2s;
+            font-size: 1rem;
+        }
+
+        .refresh-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .refresh-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* AI Section */
+        .ai-section {
+            padding: 0 2rem 2rem;
+            border-top: 1px solid var(--border);
+            background: rgba(0,0,0,0.1);
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1.5rem 0 1rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .personas {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .persona-tag {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .persona-tag:hover {
+            border-color: var(--text-muted);
+        }
+
+        .persona-tag.selected {
+            background: rgba(236, 72, 153, 0.2);
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        /* Inbox Simulator */
+        .inbox-section {
+            padding: 2rem;
+            background: #161e2e;
+            min-height: 300px;
+        }
+
+        .inbox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .message-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .message-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .msg-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .msg-sender {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .msg-subject {
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .msg-body {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            margin-top: 0.25rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 3rem 0;
+            font-style: italic;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--card-bg);
+            border: 1px solid var(--success);
+            color: var(--text-main);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .hero-text h1 { font-size: 1.8rem; }
+            .generated-id { font-size: 1.1rem; }
+            .output-area, .inbox-section, .ai-section { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container nav-wrapper">
+            <a href="#" class="logo">
+                <div class="logo-icon"></div>
+                Temp<span>Mouse</span>
+            </a>
+            <button id="themeToggle" style="background:none; border:none; color:white; cursor:pointer;">🌙</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero-text">
+            <h1>Temporary ID Generator</h1>
+            <p>Generate disposable emails and phone numbers powered by AI Personas.</p>
+        </section>
+
+        <section class="tool-card">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchMode('email')">📧 Email</button>
+                <button class="tab-btn" onclick="switchMode('sms')">📱 Mobile Number</button>
+            </div>
+
+            <!-- Output -->
+            <div class="output-area">
+                <div class="id-display" id="idDisplay" onclick="copyToClipboard()">
+                    <span class="generated-id" id="generatedId">Click Generate to Start</span>
+                    <small style="color:var(--text-muted); display:block; margin-top:0.5rem; font-size:0.75rem;">(Tap to Copy)</small>
+                </div>
+                <button class="refresh-btn" id="generateBtn" onclick="generateId()">
+                    <span>✨ Generate New ID</span>
+                </button>
+            </div>
+
+            <!-- AI Persona Engine -->
+            <div class="ai-section">
+                <div class="ai-header">
+                    <span>🤖</span> AI Persona Engine
+                </div>
+                <div class="personas">
+                    <div class="persona-tag selected" onclick="selectPersona(this, 'standard')">Standard</div>
+                    <div class="persona-tag" onclick="selectPersona(this, 'corporate')">Corporate</div>
+                    <div class="persona-tag" onclick="selectPersona(this, 'gamer')">Gamer</div>
+                    <div class="persona-tag" onclick="selectPersona(this, 'private')">Private/Anon</div>
+                </div>
+            </div>
+
+            <!-- Inbox Simulation -->
+            <div class="inbox-section">
+                <div class="inbox-header">
+                    <h3>Live Inbox <span class="status-dot"></span></h3>
+                    <small style="color:var(--text-muted)">Auto-refreshing</small>
+                </div>
+                <ul class="message-list" id="messageList">
+                    <li class="empty-state">Waiting for incoming messages...</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Temp Mouse. Powered by Simulated AI Engine.</p>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span style="color:var(--success)">✓</span> Copied to clipboard!
+    </div>
+
+    <script>
+        // State
+        let currentMode = 'email';
+        let currentPersona = 'standard';
+        let generatedValue = '';
+        let simulationInterval;
+
+        // Data Dictionaries for AI "Persona" Logic
+        const personas = {
+            standard: {
+                emails: ['user', 'temp', 'test', 'mouse', 'inbox'],
+                domains: ['tempmail.com', 'dropmail.me', 'guerrillamail.com']
+            },
+            corporate: {
+                emails: ['executive', 'admin', 'office', 'contact', 'support'],
+                domains: ['quick-corp.net', 'pro-biz.io', 'office-space.co']
+            },
+            gamer: {
+                emails: ['n00b', 'slayer', 'noobmaster', 'gamer', 'pixel'],
+                domains: ['ezgame.gg', 'clash.io', 'warp.zone']
+            },
+            private: {
+                emails: ['anon', 'ghost', 'shadow', 'cipher', 'null'],
+                domains: ['onion.ly', 'darknet.io', 'encrypted.co']
+            }
+        };
+
+        const phonePrefixes = {
+            standard: ['+1', '+44', '+91'],
+            corporate: ['+1 (NY)', '+44 (LDN)'],
+            gamer: ['+1 (GAMER)', '+800'],
+            private: ['+999', '+000']
+        };
+
+        const sampleMessages = {
+            email: [
+                { sender: "Verify Team", subject: "Confirm your account", body: "Please click here to verify your new temporary email address." },
+                { sender: "Newsletter", subject: "Weekly updates", body: "Here are the top stories you missed this week." },
+                { sender: "Alert Service", subject: "Login detected", body: "A new login was detected from a temporary IP." }
+            ],
+            sms: [
+                { sender: "Twitter", subject: "SMS Verification", body: "Your Twitter code is 4829. Don't share this." },
+                { sender: "Amazon", subject: "OTP Alert", body: "Your verification code is 9921. Valid for 5 mins." },
+                { sender: "WhatsApp", subject: "Code", body: "Your WhatsApp code is 123-456." }
+            ]
+        };
+
+        // Functions
+
+        function switchMode(mode) {
+            currentMode = mode;
+            // Update UI tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Clear inbox and regenerate
+            document.getElementById('messageList').innerHTML = '<li class="empty-state">Waiting for incoming messages...</li>';
+            generateId();
+        }
+
+        function selectPersona(element, personaName) {
+            currentPersona = personaName;
+            document.querySelectorAll('.persona-tag').forEach(tag => tag.classList.remove('selected'));
+            element.classList.add('selected');
+            generateId(); // Regenerate immediately on persona change
+        }
+
+        function getRandomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function generateRandomString(length) {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function generateId() {
+            const btn = document.getElementById('generateBtn');
+            const display = document.getElementById('idDisplay');
+            const idText = document.getElementById('generatedId');
+            
+            // Visual loading state
+            btn.disabled = true;
+            btn.innerHTML = 'Generating...';
+            display.classList.remove('active');
+
+            setTimeout(() => {
+                let val = '';
+                
+                if (currentMode === 'email') {
+                    const p = personas[currentPersona];
+                    const prefix = getRandomItem(p.emails);
+                    const randomSuffix = generateRandomString(4);
+                    const domain = getRandomItem(p.domains);
+                    val = `${prefix}${randomSuffix}@${domain}`;
+                } else {
+                    const p = phonePrefixes[currentPersona];
+                    const prefix = getRandomItem(p);
+                    const randomNum = Math.floor(100000000 + Math.random() * 900000000); // 9 digits
+                    val = `${prefix} ${randomNum}`;
+                }
+
+                generatedValue = val;
+                idText.innerText = generatedValue;
+                display.classList.add('active');
+                
+                btn.disabled = false;
+                btn.innerHTML = '✨ Generate New ID';
+
+                // Reset Inbox Simulation
+                resetSimulation();
+            }, 600); // Fake delay for "Processing" feel
+        }
+
+        // Copy to Clipboard
+        function copyToClipboard() {
+            if (!generatedValue) return;
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(generatedValue).then(() => {
+                    showToast();
+                });
+            } else {
+                // Fallback
+                const textArea = document.createElement("textarea");
+                textArea.value = generatedValue;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("Copy");
+                textArea.remove();
+                showToast();
+            }
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Inbox Simulation Logic
+        function resetSimulation() {
+            clearInterval(simulationInterval);
+            document.getElementById('messageList').innerHTML = '<li class="empty-state">Listening for messages...</li>';
+            
+            // Simulate receiving a message after 3 seconds, then every 10 seconds
+            simulationInterval = setInterval(() => {
+                addRandomMessage();
+            }, 8000);
+            
+            // First message faster
+            setTimeout(addRandomMessage, 3000);
+        }
+
+        function addRandomMessage() {
+            const list = document.getElementById('messageList');
+            const emptyState = list.querySelector('.empty-state');
+            if (emptyState) emptyState.remove();
+
+            const sourceData = currentMode === 'email' ? sampleMessages.email : sampleMessages.sms;
+            const msgData = getRandomItem(sourceData);
+            
+            const li = document.createElement('li');
+            li.className = 'message-item';
+            
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            li.innerHTML = `
+                <div class="msg-meta">
+                    <span class="msg-sender">${msgData.sender}</span>
+                    <span>${time}</span>
+                </div>
+                <div class="msg-subject">${msgData.subject}</div>
+                <div class="msg-body">${msgData.body}</div>
+            `;
+
+            list.insertBefore(li, list.firstChild);
+            
+            // Limit list to 5 items
+            if (list.children.length > 5) {
+                list.removeChild(list.lastChild);
+            }
+        }
+
+        // Initialize
+        generateId();
+
+    </script>
+</body>
+</html>
+```
